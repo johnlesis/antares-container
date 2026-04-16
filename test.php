@@ -59,3 +59,32 @@ try {
 } catch (\Antares\Container\ContainerException $e) {
     echo $e->getMessage() . "\n";
 }
+
+// test missing type hint
+class NoTypeHint
+{
+    public function __construct(
+        private $something,
+    ) {}
+}
+
+// test builtin with no default
+class PrimitiveNoDefault
+{
+    public function __construct(
+        private string $host,
+        private int $port,
+    ) {}
+}
+
+try {
+    $container->make(NoTypeHint::class);
+} catch (\Antares\Container\ContainerException $e) {
+    echo $e->getMessage() . "\n";
+}
+
+try {
+    $container->make(PrimitiveNoDefault::class);
+} catch (\Antares\Container\ContainerException $e) {
+    echo $e->getMessage() . "\n";
+}

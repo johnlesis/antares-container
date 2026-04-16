@@ -60,10 +60,25 @@ final class Container
 
             foreach ($parameters as $parameter) {
                 $type = $parameter->getType();
+
+                if ($type === null) {
+                    if ($parameter->isDefaultValueAvailable()) {
+                        $args[] = $parameter->getDefaultValue();
+                        continue;
+                    }
+                    throw new ContainerException(
+                        "Parameter \${$parameter->getName()} in {$className} has no type hint and no default value."
+                    );
+                }
+
                 if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
                     $args[] = $this->make($type->getName());
                 } elseif ($parameter->isDefaultValueAvailable()) {
                     $args[] = $parameter->getDefaultValue();
+                } else {
+                    throw new ContainerException(
+                        "Cannot resolve primitive parameter \${$parameter->getName()} in {$className}. Register it as a singleton with explicit values."
+                    );
                 }
             }
             unset($this->building[$className]);
