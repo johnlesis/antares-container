@@ -43,6 +43,11 @@ final class Container
             $this->building[$className] = true;
             
             $reflectionClass = new ReflectionClass($className);
+            if (!$reflectionClass->isInstantiable()) {
+                throw new ContainerException(
+                    "Cannot instantiate {$className}. Is it an interface or abstract class? Did you forget to bind it?"
+                );
+            }
 
             $constructor = $reflectionClass->getConstructor();
             if ($constructor === null) {

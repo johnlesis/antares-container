@@ -3,6 +3,7 @@
 require 'vendor/autoload.php';
 
 use Antares\Container\Container;
+use Antares\Container\ContainerException;
 
 class Logger {
     public function log(string $message): void {
@@ -48,5 +49,13 @@ class D {
 try {
     $container->make(C::class);
 } catch (ContainerException $e) {
+    echo $e->getMessage() . "\n";
+}
+
+interface RepositoryInterface {}
+
+try {
+    $container->make(RepositoryInterface::class);
+} catch (\Antares\Container\ContainerException $e) {
     echo $e->getMessage() . "\n";
 }
